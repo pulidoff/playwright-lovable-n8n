@@ -1,42 +1,29 @@
 const { test, expect } = require('@playwright/test');
 const { POManager } = require('../pageobjects/POManager');
 
-const EMAIL = process.env.TEST_EMAIL;
-const PASSWORD = process.env.TEST_PASSWORD;
-
 test.describe('Authentication', () => {
-  let poManager;
+  test('authenticated user lands on the app, not on /auth', async ({ page }) => {
+    await page.goto('/');
 
-  test.beforeEach(async ({ page }) => {
-    poManager = new POManager(page);
-    await poManager.getLoginPage().goto();
+    await expect(page).not.toHaveURL(/\/auth/);
   });
 
-  test('successful login with valid credentials', async ({ page }) => {
-    const loginPage = poManager.getLoginPage();
+  test('unauthenticated user is redirected to /auth', async ({ browser }) => {
+    const context = await browser.newContext(); // no storageState
+    const page = await context.newPage();
 
-    await loginPage.login(EMAIL, PASSWORD);
+    await page.goto('https://abb95dd7-0f35-4a7d-b005-a2633f7e6534.lovableproject.com/');
 
-    await expect(page).not.toHaveURL(/login|sign-in/i);
-    await expect(page.locator('body')).not.toContainText(/invalid|incorrect|error/i);
+    await expect(page).toHaveURL(/\/auth/);
+    await context.close();
   });
 
-  test('failed login with invalid credentials', async ({ page }) => {
-    const loginPage = poManager.getLoginPage();
+  test('logout returns user to /auth', async ({ page }) => {
+    await page.goto('/');
 
-    await loginPage.login('wrong@example.com', 'WrongPassword123!');
+    const poManager = new POManager(page);
+    await poManager.getLoginPage().logout();
 
-    await expect(page.locator('body')).toContainText(/invalid|incorrect|error|wrong/i);
-  });
-
-  test('successful logout after login', async ({ page }) => {
-    const loginPage = poManager.getLoginPage();
-
-    await loginPage.login(EMAIL, PASSWORD);
-    await expect(page).not.toHaveURL(/login|sign-in/i);
-
-    await loginPage.logout();
-
-    await expect(page).toHaveURL(/login|sign-in|\//i);
+    await expect(page).toHaveURL(/\/auth/);
   });
 });

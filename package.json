@@ -4,6 +4,7 @@
   "description": "Playwright E2E tests for Lovable task manager app",
   "main": "index.js",
   "scripts": {
+    "setup:auth": "node scripts/setup-auth.js",
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",

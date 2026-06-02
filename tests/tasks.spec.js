@@ -1,18 +1,12 @@
 const { test, expect } = require('@playwright/test');
 const { POManager } = require('../pageobjects/POManager');
 
-const EMAIL = process.env.TEST_EMAIL;
-const PASSWORD = process.env.TEST_PASSWORD;
-
 test.describe('Task Management', () => {
   let poManager;
 
   test.beforeEach(async ({ page }) => {
     poManager = new POManager(page);
-    const loginPage = poManager.getLoginPage();
-    await loginPage.goto();
-    await loginPage.login(EMAIL, PASSWORD);
-    await page.waitForURL((url) => !url.toString().match(/login|sign-in/i));
+    await page.goto('/');
   });
 
   test('create a new task', async ({ page }) => {

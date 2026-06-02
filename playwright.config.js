@@ -12,6 +12,7 @@ module.exports = defineConfig({
   use: {
     baseURL: 'https://abb95dd7-0f35-4a7d-b005-a2633f7e6534.lovableproject.com',
     headless: true,
+    storageState: 'auth/storageState.json',
     screenshot: 'only-on-failure',
     video: 'on-first-retry',
     trace: 'on-first-retry',
