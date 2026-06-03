@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const { defineConfig, devices } = require('@playwright/test');
 
 module.exports = defineConfig({
@@ -10,12 +8,9 @@ module.exports = defineConfig({
   workers: 1,
   reporter: [['html'], ['list']],
   use: {
-    baseURL: 'https://abb95dd7-0f35-4a7d-b005-a2633f7e6534.lovableproject.com',
+    baseURL: 'https://task-bliss-app-82.lovable.app',
     headless: true,
-    storageState: 'auth/storageState.json',
     screenshot: 'only-on-failure',
-    video: 'on-first-retry',
-    trace: 'on-first-retry',
   },
   projects: [
     {
